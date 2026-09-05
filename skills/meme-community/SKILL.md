@@ -48,11 +48,23 @@ curl -s "https://api.geckoterminal.com/api/v2/networks/<network>/pools/<pool_add
 
 Read `attributes.transactions.h24.buyers` and `.sellers` — these are **unique wallet counts**, not trade counts. Also read `h1` for the current pulse.
 
+DEXScreener is the primary pair-level source — it covers every chain used here and needs no key:
+
 ```bash
+# every pair for a token (comma-separate up to 30 addresses)
 curl -s "https://api.dexscreener.com/latest/dex/tokens/<token_address>"
+
+# one known pair directly
+curl -s "https://api.dexscreener.com/latest/dex/pairs/<chainId>/<pair_address>"
 ```
 
-Read per pair: `txns.h24.buys` / `.sells` (**trade counts**), `volume.h24`, `liquidity.usd`, `fdv`, `priceChange.h24`, and `info.socials`.
+Read per pair: `txns.h24.buys` / `.sells` (**trade counts**), `txns.h1` for the current pulse, `volume.h24`, `liquidity.usd` / `.base` / `.quote`, `fdv`, `marketCap`, `priceUsd`, `priceNative`, `priceChange.h24`, `pairCreatedAt`, and `info.socials` / `info.websites`.
+
+When a token has several pairs, pick the one with the deepest `liquidity.usd` as the reference pair and sum `volume.h24` across pairs — scoring a thin secondary pool gives a false read.
+
+`pairCreatedAt` is the age gate: a pool minutes old has no community history yet, whatever its volume looks like.
+
+Rate limits: 300 req/min for `tokens` / `pairs` / `search`, 60 req/min for `token-profiles` / `token-boosts`. Batch token addresses and cache.
 
 Derive:
 - **Trades per unique buyer** = `txns.h24.buys` / `transactions.h24.buyers`. Above ~10 means a few wallets are cycling volume
