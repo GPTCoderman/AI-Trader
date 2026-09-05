@@ -96,6 +96,7 @@ Blockscout gives ground truth on state, not on price or narrative. Cross-check w
 - GMGN (`https://gmgn.ai/?chain=robinhood`) for price, liquidity, sniper/bundler ratios
 - Lookonchain (`https://www.lookonchain.com`) for flagged whale wallets
 - The `market-intel` skill for AI-Trader's own news snapshots
+- The `meme-community` skill to score and keep watching a token's community over time
 
 ## Before Publishing a Trade
 
